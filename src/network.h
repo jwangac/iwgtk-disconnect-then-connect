@@ -48,7 +48,7 @@ struct Network_s {
 };
 
 const gchar* get_security_type(const gchar *type_raw);
-void connect_button_clicked(GtkButton *button, GDBusProxy *network_proxy);
+void connect_button_clicked(GtkButton *button, Network *network);
 void disconnect_button_clicked(GtkButton *button, Network *network);
 void network_set(Network *network);
 void station_add_network(Station *station, GDBusProxy *network_proxy, gint16 signal_strength, int index);

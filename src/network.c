@@ -43,8 +43,23 @@ const gchar* get_security_type(const gchar *type_raw) {
     }
 }
 
-void connect_button_clicked(GtkButton *button, GDBusProxy *network_proxy) {
+void connect_button_clicked(GtkButton *button, Network *network) {
     CallbackMessages *messages;
+
+    GDBusProxy *network_proxy;
+    {
+    g_dbus_proxy_call(
+	network->station->proxy,
+	"Disconnect",
+	NULL,
+	G_DBUS_CALL_FLAGS_NONE,
+	-1,
+	NULL,
+	NULL,
+	NULL);
+    g_usleep(500000);
+    }
+    network_proxy = network->proxy;
 
     messages = g_malloc(sizeof(CallbackMessages));
     messages->error_table = detailed_errors_network;
@@ -182,7 +197,7 @@ void network_set(Network *network) {
 
 	    gtk_button_set_label(button, _("Connect"));
 	    gtk_widget_set_tooltip_text(network->connect_button, _("Connect to network"));
-	    network->button_handler_id = g_signal_connect(button, "clicked", G_CALLBACK(connect_button_clicked), network->proxy);
+	    network->button_handler_id = g_signal_connect(button, "clicked", G_CALLBACK(connect_button_clicked), network);
 	}
     }
 
